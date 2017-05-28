@@ -1,0 +1,7 @@
+bower_components/
+node_modules/
+css/
+compiled/
+.jscsrc
+index.html
+!views/index.html

@@ -1,0 +1,31 @@
+{
+  "name": "muzli",
+  "private": true,
+  "version": "1.0.0",
+  "depVersion": "1.0",
+  "basePath": "/",
+  "description": "miz.li | newsfeed",
+  "main": "index.html",
+  "scripts": {
+    "postinstall": "bower install && grunt",
+    "prestart": "npm install",
+    "test": "karma start"
+  },
+  "author": "petrasb@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "0.4.5",
+    "grunt-contrib-concat": "0.5.1",
+    "grunt-contrib-cssmin": "0.12.2",
+    "grunt-contrib-less": "1.0.1",
+    "grunt-contrib-uglify": "0.9.1",
+    "grunt-embed": "^0.2.1",
+    "grunt-injector": "0.6.0",
+    "grunt-regex-replace": "^0.2.6",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-jasmine": "^1.0.2",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "phantomjs-prebuilt": "^2.1.7"
+  }
+}

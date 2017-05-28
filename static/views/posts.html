@@ -1,0 +1,58 @@
+<div class="container" scroll-events scroll-events-init="window">
+
+	<div class="preloader-container loading" ng-class="{loaded: isLoadingComplete, loading: !isLoadingComplete}">
+
+		<div class="preloader-header">
+			<div class="preloader-loader">
+				<div data-loader="circle-side"></div> 
+			</div>	
+		</div>
+		
+		<div class="preloader-main">
+
+			<div class="row" ng-if="'feed' | isState">
+				<div class="col-md-12">
+					<h1>Showing feed from <strong>{{$stateParams.feed}}</strong></h1>
+					<a ui-sref="index">Show posts from all feeds</a>
+				</div>
+			</div>
+			
+        	<div class="row" ng-hide="isListEmpty">
+				<div class="col-md-12">
+					<ul class="posts">
+						<li class="fade-in row post" ng-repeat="post in posts">
+							<div class="col-md-4">
+								<a href="{{post.url}}" class="image" target="_blank">
+									<img src="{{post.image}}" alt="{{post.title}}">
+								</a>
+							</div>
+							<div class="col-md-8">
+								<a href="{{post.url}}" class="title" target="_blank">{{post.title}}</a>
+								<strong>{{post.createdAt | date:'MMM dd, yyyy hh:mm'}}</strong>
+								<a ui-sref="feed({feed: post.source})"><span class="label label-danger">{{post.source}}</span></a>
+								<span class="label label-success" ng-if="post.isNew">new</span>
+								<p>{{post.description}}</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="col-md-12 text-center list-end-message" ng-if="isLastItemLoaded">
+					<h3>That's everything we got for now...</h3>
+				</dif>
+			</div> 
+
+		</div>
+	</div>
+
+	<div class="row placeholder" ng-if="isListEmpty">
+		<div class="col-md-6 col-md-offset-3">
+			<h2>No conversations found!</h2>
+			<p>Try searching by another criteria or check your permissions.</p>
+			<div class="controls text-center">
+				<a class="btn btn-primary" ng-click="resetSearch()">Reset search</a>
+			</div>
+		</div>
+	</div>
+
+</div>
+
