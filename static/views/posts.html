@@ -2,6 +2,11 @@
 
 	<div class="preloader-container loading" ng-class="{loaded: isLoadingComplete, loading: !isLoadingComplete}">
 
+		<div class="controls pull-right">
+			<i class="fa fa-clock-o" aria-hidden="true" ng-click="filter.order = 'recent'" ng-class="{active: filter.order === 'recent'}"></i>
+			<i class="fa fa-bullhorn" aria-hidden="true" ng-click="filter.order = 'social'" ng-class="{active: filter.order === 'social'}"></i>
+		</div>
+
 		<div class="preloader-header">
 			<div class="preloader-loader">
 				<div data-loader="circle-side"></div> 
@@ -31,6 +36,10 @@
 								<strong>{{post.createdAt | date:'MMM dd, yyyy hh:mm'}}</strong>
 								<a ui-sref="feed({feed: post.source})"><span class="label label-danger">{{post.source}}</span></a>
 								<span class="label label-success" ng-if="post.isNew">new</span>
+								<div class="socials pull-right">
+									<span class="facebook" ng-if="post.fbShareCount"><i class="fa fa-facebook-official" aria-hidden="true"></i> {{post.fbShareCount}}</span>
+									<span class="google" ng-if="post.googleShareCount"><i class="fa fa-google-plus" aria-hidden="true"></i> {{post.googleShareCount}}</span>
+								</div>
 								<p>{{post.description}}</p>
 							</div>
 						</li>

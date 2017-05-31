@@ -82,7 +82,9 @@ angular.module('muzli').controller('indexController', ['$scope', '$state', '$q',
         $scope.isFechingInProgress = false;
         $scope.isLoadingComplete = false;
         $scope.pageSize = 10;
-        $scope.filter = {};
+        $scope.filter = {
+            order: 'recent'
+        };
 
 
         $scope.initList();
@@ -92,6 +94,15 @@ angular.module('muzli').controller('indexController', ['$scope', '$state', '$q',
                 $scope.loadPosts(getFetchParams());
             }
         });
+
+        //Initialize watcher check ordering toggles
+        $scope.$watch('filter.order', function (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                $scope.initList();
+                $scope.loadPosts(getFetchParams());
+            }
+        });
+
 
         $scope.loadPosts(getFetchParams());
 

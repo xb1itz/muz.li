@@ -1,6 +1,6 @@
 angular.module('muzli').constant('settings', {
-	apiUrl: 'http://localhost:3000/',
-	rootPath: '/',
+	apiUrl: 'http://52.28.154.213/',
+	rootPath: '/muz.li/',
     version: '1.0.0',
     tracker: {
     	GA_TRACKING_CODE: '',

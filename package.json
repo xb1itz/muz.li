@@ -15,6 +15,8 @@
     "feedparser": "^2.2.0",
     "moment": "^2.18.1",
     "q": "^1.5.0",
-    "rethinkdb": "^2.3.3"
+    "request-promise": "^4.2.1",
+    "rethinkdb": "^2.3.3",
+    "rethinkdbdash": "^2.3.29"
   }
 }

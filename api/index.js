@@ -3,6 +3,11 @@ var r = require('rethinkdb');
 
 var connection;
 
+
+/*=====================================
+=            CORS HANDLERS            =
+=====================================*/
+
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "http://local.muz.li");
     res.header("Access-Control-Allow-Credentials", "true");
@@ -10,13 +15,21 @@ app.use(function(req, res, next) {
     next();
 });
 
+
+
+/*===================================
+=            API METHODS            =
+===================================*/
+
 app.get('/posts', function(req, res) {
 
     var offset = parseInt(req.query.offset) || 0;
     var limit = parseInt(req.query.limit) || 10;
     var source = req.query.feed;
+    var order = req.query.order;
 
-    r.table('posts').filter(function (post) {
+    r.table('posts')
+    .filter(function (post) {
 
         if (source) {
             return post('source').eq(source);
@@ -24,8 +37,19 @@ app.get('/posts', function(req, res) {
             return post
         }
 
-    }).orderBy(r.desc('createdAt')).skip(offset).limit(limit).
-        run(connection, function(err, cursor) {
+    })
+    .orderBy(r.desc(function(post) {
+
+        if (order === 'social') {
+            return post('fbShareCount').add(post('googleShareCount'))
+        } else {
+            return post('createdAt')
+        }
+
+    }))
+    .skip(offset)
+    .limit(limit)
+    .run(connection, function(err, cursor) {
 
             if (err) throw err;
 
@@ -40,6 +64,11 @@ app.get('/posts', function(req, res) {
         });
 })
 
+
+
+/*=================================
+=            FALLBACKS            =
+=================================*/
 
 app.all('*', function(req, res) {
     res.sendStatus(404);

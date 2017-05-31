@@ -211,6 +211,27 @@ module.exports = function (grunt) {
                     },
                     flags: 'g'
                 }]
+            },
+            rootpath: {
+                src: ['index.html'],
+                actions: [{
+                    name: 'Set rootpath',
+                    search: '<base href=".*" \/>',
+                    replace: function() {
+
+                        var isPackTask = grunt.cli.tasks.indexOf('pack') > -1;
+                        var rootpath;
+
+                        if (isPackTask) {
+                            rootpath = grunt.file.read('js/settings.prod.js').match(/rootPath:\s*\'(.*)\'/)[1];
+                        } else {
+                            rootpath = grunt.file.read('js/settings.local.js').match(/rootPath:\s*\'(.*)\'/)[1];
+                        }
+
+                        return '<base href="' + rootpath + '" \/>';
+                    },
+                    flags: 'g'
+                }]
             }
         }
     });
@@ -227,8 +248,8 @@ module.exports = function (grunt) {
 
 
     // Default task(s).
-    grunt.registerTask('default', ['regex-replace:local', 'less', 'injector:local', 'injector:tracking', 'injector:newrelic_local']);
-    grunt.registerTask('pack', ['regex-replace:prod', 'concat:js', 'uglify', 'less', 'cssmin', 'injector:production', 'injector:tracking', 'injector:newrelic_production', 'embed:production']);
+    grunt.registerTask('default', ['regex-replace:local', 'less', 'injector:local', 'injector:tracking', 'injector:newrelic_local', 'regex-replace:rootpath']);
+    grunt.registerTask('pack', ['regex-replace:prod', 'concat:js', 'uglify', 'less', 'cssmin', 'injector:production', 'injector:tracking', 'injector:newrelic_production', 'embed:production', 'regex-replace:rootpath']);
     grunt.registerTask('inject', ['injector:local']);
     grunt.registerTask('css', ['less']);
 };
