@@ -12,11 +12,13 @@
     "cheerio": "^1.0.0-rc.1",
     "crawler": "^1.0.5",
     "express": "^4.15.3",
+    "express-ws": "^3.0.0",
     "feedparser": "^2.2.0",
     "moment": "^2.18.1",
     "q": "^1.5.0",
     "request-promise": "^4.2.1",
     "rethinkdb": "^2.3.3",
-    "rethinkdbdash": "^2.3.29"
+    "rethinkdbdash": "^2.3.29",
+    "ws": "^3.0.0"
   }
 }

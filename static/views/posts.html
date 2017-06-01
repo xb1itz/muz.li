@@ -1,10 +1,16 @@
 <div class="container" scroll-events scroll-events-init="window">
 
 	<div class="preloader-container loading" ng-class="{loaded: isLoadingComplete, loading: !isLoadingComplete}">
+		
+		<div class="alert alert-success new-posts fade-in" ng-show="newPosts.length">
+			<strong>Hey!</strong>
+			There are {{newPosts.length}} new posts. Do you want to see them?
+			<button class="btn btn-default pull-right" ng-click="resetList()">Yep. Show them to me</button>
+		</div>
 
 		<div class="controls pull-right">
-			<i class="fa fa-clock-o" aria-hidden="true" ng-click="filter.order = 'recent'" ng-class="{active: filter.order === 'recent'}"></i>
-			<i class="fa fa-bullhorn" aria-hidden="true" ng-click="filter.order = 'social'" ng-class="{active: filter.order === 'social'}"></i>
+			<i class="fa fa-clock-o" aria-hidden="true" ng-click="filter.order = 'recent'" ng-class="{active: filter.order === 'recent'}" uib-tooltip="Show most recent posts first" tooltip-placement="bottom"></i>
+			<i class="fa fa-bullhorn" aria-hidden="true" ng-click="filter.order = 'social'" ng-class="{active: filter.order === 'social'}" uib-tooltip="Show most popular posts first" tooltip-placement="bottom"></i>
 		</div>
 
 		<div class="preloader-header">

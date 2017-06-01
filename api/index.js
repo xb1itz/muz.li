@@ -1,8 +1,11 @@
+var WebSocket = require('ws');
 var app = require('express')();
 var r = require('rethinkdb');
+var q = require('q');
 
+var databaseSetUp = q.defer();
 var connection;
-
+var websocket;
 
 /*=====================================
 =            CORS HANDLERS            =
@@ -64,6 +67,30 @@ app.get('/posts', function(req, res) {
         });
 })
 
+databaseSetUp.promise.then(function(connection) {
+    r.table('posts')
+    .changes()
+    .run(connection, function(err, cursor) {
+
+        if (err) throw err;
+        
+        cursor.each(function(err, row) {
+            
+            if (err) throw err;
+
+            if (!row.old_val) {
+                websocket.clients.forEach(function each(client) {
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send(JSON.stringify({
+                            type: 'newPost',
+                            data: row.new_val,
+                        }));
+                    }
+                });
+            };
+        });
+    });
+});
 
 
 /*=================================
@@ -74,7 +101,16 @@ app.all('*', function(req, res) {
     res.sendStatus(404);
 });
 
-module.exports = function (conn) {
-    connection = conn;
+module.exports = function (dbSetUpPromise, ws) {
+
+    dbSetUpPromise.then(function(con) {
+        
+        connection = con;
+        websocket = ws;
+        
+        databaseSetUp.resolve(con);
+    });
+
+
     return app;
 };

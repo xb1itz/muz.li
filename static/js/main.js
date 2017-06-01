@@ -3,7 +3,9 @@
 var muzli = angular.module('muzli', [
 
     //Third party modules
-    'ui.router'
+    'ui.router',
+    'ui.bootstrap',
+    'ngWebSocket',
 
 ]);
 
@@ -108,8 +110,10 @@ muzli.config(['$httpProvider', '$locationProvider', 'settings',
 ]);
 
 // Load global user settings
-muzli.run(['$rootScope', '$q', '$state', '$stateParams', '$timeout', 'trackingService', 
-    function($rootScope, $q, $state, $stateParams, $timeout, trackingService) {
+muzli.run(['$rootScope', '$q', '$state', '$stateParams', '$timeout', '$websocket', 'trackingService', 'settings',
+    function($rootScope, $q, $state, $stateParams, $timeout, $websocket, trackingService, settings) {
+
+        var websocket;
 
         //Initial globals
         $rootScope.$state = $state;
@@ -123,6 +127,25 @@ muzli.run(['$rootScope', '$q', '$state', '$stateParams', '$timeout', 'trackingSe
             console.log('State changed to: ' + toState.name);
         });
 
+
+        //Connect websocket to receive most live updates
+        websocket = $websocket(settings.wsUrl);
+
+        websocket.onOpen(function() {
+            console.log('WS connection established');
+        });
+
+        websocket.onMessage(function(message) {
+
+            var messageData = JSON.parse(message.data);
+
+            if (messageData.type === 'newPost') {
+                $rootScope.$broadcast('newPost', messageData);
+            };
+        });
+
+
+        //Global method to change page title
         $rootScope.setPageTitle = function (title) {
 
             $rootScope.pageTitle = title;

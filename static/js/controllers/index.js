@@ -10,7 +10,6 @@ angular.module('muzli').controller('indexController', ['$scope', '$state', '$q',
             });
         };
 
-
         $scope.initList = function () {
             $scope.isLastItemLoaded = false;
             $scope.isListEmpty = false;
@@ -18,6 +17,7 @@ angular.module('muzli').controller('indexController', ['$scope', '$state', '$q',
             $scope.limit = 10; //Use for preloading more data than it is rendered
             $scope.page = 0;
             $scope.posts = [];
+            $scope.newPosts = [];
         };
 
         $scope.loadPosts = function (fetchParams) {
@@ -70,6 +70,11 @@ angular.module('muzli').controller('indexController', ['$scope', '$state', '$q',
             });
         };
 
+        $scope.resetList = function() {
+            $scope.initList();
+            $scope.loadPosts(getFetchParams());
+        };
+
 
         /*============================
         =            Init            =
@@ -82,10 +87,10 @@ angular.module('muzli').controller('indexController', ['$scope', '$state', '$q',
         $scope.isFechingInProgress = false;
         $scope.isLoadingComplete = false;
         $scope.pageSize = 10;
+        $scope.newPosts = [];
         $scope.filter = {
             order: 'recent'
         };
-
 
         $scope.initList();
 
@@ -98,11 +103,16 @@ angular.module('muzli').controller('indexController', ['$scope', '$state', '$q',
         //Initialize watcher check ordering toggles
         $scope.$watch('filter.order', function (newValue, oldValue) {
             if (newValue !== oldValue) {
-                $scope.initList();
-                $scope.loadPosts(getFetchParams());
+                $scope.resetList();
             }
         });
 
+        //Listen for new post events
+        $scope.$on('newPost', function(event, message) {
+            if (!$state.params.feed || message.data.source === $state.params.feed) {
+                $scope.newPosts.push(message.data);
+            }
+        });
 
         $scope.loadPosts(getFetchParams());
 
