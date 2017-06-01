@@ -3,14 +3,32 @@ var cheerio = require('cheerio');
 var q = require('q');
 var r = require('rethinkdb');
 var FeedParser = require('feedparser');
+var cfgManager = require('node-config-manager');
 
 var req = request('http://feeds.feedburner.com/TechCrunch/');
 var feedparser = new FeedParser();
 
 var databaseSetUp = q.defer();
 var recentPostLoaded = q.defer();
-var databaseName = 'muzli';
 var connection;
+var dbConfig;
+
+
+/*============================================
+=            Load database config            =
+============================================*/
+
+cfgManager.init({
+	configDir: '../config',
+});
+
+cfgManager.addConfig('db');
+dbConfig = cfgManager.getConfig('db');
+
+
+/*===========================================
+=            Setup DB connection            =
+===========================================*/
 
 r.connect({ host: 'localhost', port: 28015 }, function(err, conn) {
     
@@ -18,20 +36,20 @@ r.connect({ host: 'localhost', port: 28015 }, function(err, conn) {
     
     connection = conn;
 
-    r.dbList().contains(databaseName)
+    r.dbList().contains(dbConfig.name)
 	    .do(function(databaseExists) {
-	    	return r.branch(databaseExists, { dbs_created: 0 }, r.dbCreate(databaseName));
+	    	return r.branch(databaseExists, { dbs_created: 0 }, r.dbCreate(dbConfig.name));
 	    })
 	    .do(function() {
-	    	return r.db(databaseName).tableList().contains('posts').do(function(tableExists) {
-		    	return r.branch(tableExists, { tables_created: 0 }, r.db(databaseName).tableCreate('posts'));
+	    	return r.db(dbConfig.name).tableList().contains('posts').do(function(tableExists) {
+		    	return r.branch(tableExists, { tables_created: 0 }, r.db(dbConfig.name).tableCreate('posts'));
 		    })
 	    })
 	    .run(conn, function(err, cursor) {
 	    	
 	    	if (err) throw err;
 
-	    	conn.use(databaseName);
+	    	conn.use(dbConfig.name);
 	    	databaseSetUp.resolve();
 
 	    });

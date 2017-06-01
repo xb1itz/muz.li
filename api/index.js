@@ -19,7 +19,6 @@ app.use(function(req, res, next) {
 });
 
 
-
 /*===================================
 =            API METHODS            =
 ===================================*/
@@ -67,6 +66,11 @@ app.get('/posts', function(req, res) {
         });
 })
 
+
+/*=========================================================
+=            Setup DB for live feed monitoring            =
+=========================================================*/
+
 databaseSetUp.promise.then(function(connection) {
     r.table('posts')
     .changes()
@@ -110,7 +114,6 @@ module.exports = function (dbSetUpPromise, ws) {
         
         databaseSetUp.resolve(con);
     });
-
 
     return app;
 };

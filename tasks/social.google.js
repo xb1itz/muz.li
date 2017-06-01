@@ -1,9 +1,27 @@
+var cfgManager = require('node-config-manager');
 var rp = require('request-promise');
 var q = require('q');
 var r;
 
 var databaseSetUp = q.defer();
-var databaseName = 'muzli';
+var dbConfig;
+
+
+/*============================================
+=            Load database config            =
+============================================*/
+
+cfgManager.init({
+	configDir: '../config',
+});
+
+cfgManager.addConfig('db');
+dbConfig = cfgManager.getConfig('db');
+
+
+/*===========================================
+=            Setup DB connection            =
+===========================================*/
 
 var updateShareCounts = function (posts) {
 
@@ -55,7 +73,7 @@ var updateShareCounts = function (posts) {
 ================================================*/
 
 r = require('rethinkdbdash')({
-	db: databaseName
+	db: dbConfig.name
 })
 
 

@@ -15,6 +15,7 @@
     "express-ws": "^3.0.0",
     "feedparser": "^2.2.0",
     "moment": "^2.18.1",
+    "node-config-manager": "^1.2.0",
     "q": "^1.5.0",
     "request-promise": "^4.2.1",
     "rethinkdb": "^2.3.3",
